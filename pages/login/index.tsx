@@ -175,11 +175,11 @@ const Login = () => {
             <Image src="/assets/icon.png" alt="logo" width="64"  height="64" variant='centered' priority ={true}/>
             <Fieldset>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => handleEmail(e.target.value)}/>
+              <Input id="email" type="email" value={email} onChange={(e) => handleEmail(e.target.value)} required={true}/>
             </Fieldset>
             <Fieldset>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => handlePassword(e.target.value)} />
+              <Input id="password" type="password" value={password} onChange={(e) => handlePassword(e.target.value)} required={true}/>
             </Fieldset>
             <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
               <Button variant="green" type='submit'>Log in</Button>
@@ -191,19 +191,19 @@ const Login = () => {
             <Image src="/assets/icon.png" alt="logo" width="64"  height="64" variant='centered'/>
             <Fieldset>
               <Label htmlFor="siginUsername">Username</Label>
-              <Input id="siginUsername" type="text" value={signupUsername} onChange={(e) => handleSignupUsername(e.target.value)}/>
+              <Input id="siginUsername" type="text" value={signupUsername} maxLength={20} onChange={(e) => handleSignupUsername(e.target.value)} required={true}/>
             </Fieldset>
             <Fieldset>
               <Label htmlFor="siginEmail">Email</Label>
-              <Input id="siginEmail" type="email" value={signupEmail} onChange={(e) => handleSignupEmail(e.target.value)}/>
+              <Input id="siginEmail" type="email" value={signupEmail} onChange={(e) => handleSignupEmail(e.target.value)} required={true}/>
             </Fieldset>
             <Fieldset>
               <Label htmlFor="siginPassword">Password</Label>
-              <Input id="siginPassword" type="password" value={signupPassword}  onChange={(e) => handleSignupPassword(e.target.value)}/>
+              <Input id="siginPassword" type="password" value={signupPassword}  onChange={(e) => handleSignupPassword(e.target.value)} required={true}/>
             </Fieldset>
             <Fieldset>
               <Label htmlFor="siginConfirmPassword">Confirm password</Label>
-              <Input id="siginConfirmPassword" type="password" value={signupPasswordConfirmation}  onChange={(e) => handleSignupPasswordConfirmation(e.target.value)}/>
+              <Input id="siginConfirmPassword" type="password" value={signupPasswordConfirmation}  onChange={(e) => handleSignupPasswordConfirmation(e.target.value)} required={true}/>
             </Fieldset>
             <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
               <Button variant={"green"} type="submit">Sign up</Button>
