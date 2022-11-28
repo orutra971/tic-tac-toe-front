@@ -7,16 +7,32 @@ const instance = axios.create({
 
 export const post = async (endpoit: string, data: unknown, token: string) => {
   return instance.post(endpoit, data, {headers: {"x-access-token": token}})
+    .catch((err) => {
+      console.log({...err});
+      return err;
+    })
 }
 
 export const get = async (endpoit: string, token: string) => {
   return instance.get(endpoit, {headers: {"x-access-token": token}})
+  .catch((err) => {
+    console.log({...err});
+    return err;
+  })
 }
 
 export const patch = async (endpoit: string, data: unknown, token: string) => {
   return instance.patch(endpoit, data, {headers: {"x-access-token": token}})
+  .catch((err) => {
+    console.log({...err});
+    return err;
+  })
 }
 
 export const del = async (endpoit: string, token: string) => {
   return instance.delete(endpoit, {headers: {"x-access-token": token}})
+    .catch((err) => {
+      console.log({...err});
+      return err;
+    })
 }
