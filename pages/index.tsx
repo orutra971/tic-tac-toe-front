@@ -50,7 +50,7 @@ const Home = () => {
     if (!session.user || !session.user.id) return;
     const controller = new AbortController();
     const signal = controller.signal;
-    console.log("LOADS DATA");
+    
     fetch('/api/data', 
       {
         headers: {

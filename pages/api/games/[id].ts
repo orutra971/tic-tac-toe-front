@@ -9,7 +9,6 @@ const game = async (request: NextApiRequest, response: NextApiResponse) => {
   const usersResponse = await get('/users', accessToken);
 
   if (!accessToken || !id || !usersResponse.data) {
-    console.log({gameData: {accessToken, id}});
     response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Fail getting the games'}));

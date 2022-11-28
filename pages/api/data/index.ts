@@ -6,7 +6,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
   const accessToken = request.headers["x-access-token"] as string;
 
   if (!accessToken) {
-    response.statusCode = 500;
+    response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
@@ -17,7 +17,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
   const gamesResponse = await get('/games', accessToken);
 
   if (!leaderboardResponse.data || !usersResponse.data || !gamesResponse.data) {
-    response.statusCode = 500;
+    response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
