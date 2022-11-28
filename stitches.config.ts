@@ -1,10 +1,10 @@
-import { createStitches, styled } from "@stitches/react";
+import { createStitches } from "@stitches/react";
 
-const stitches = createStitches({
+export const { styled, css, globalCss, config } = createStitches({
   media: {
-    bp1: "(min-width: 320px)",
-    bp2: "(min-width: 768px)",
-    bp3: "(min-width: 1200px)",
+    bp1: "(max-width: 767px)",
+    bp2: "(min-width: 768px) and (max-width: 899px)",
+    bp3: "(min-width: 900px)"
   },
   theme: {
     colors: {
@@ -45,17 +45,18 @@ const stitches = createStitches({
   },
 });
 
-export const darkTheme = stitches.createTheme({
+/*
+export const darkTheme = theme.createTheme({
   colors: {
       bg: "$darkJungleGreen",
       fg: "$fluorescentBlue",
   }
 });
+*/
 
 
-
-const injectGlobalStyles = stitches.globalCss({
-  "*": { fontFamily: "Hammersmith One" },
+const injectGlobalStyles = globalCss({
+  "*": { fontFamily: "Hammersmith One", boxSizing: "border-box" },
   "*:after": { fontFamily: "Hammersmith One" },
   "*:before": { fontFamily: "Hammersmith One" },
   body: { margin: 0, padding: 0, height: '100%'},
@@ -66,6 +67,4 @@ const injectGlobalStyles = stitches.globalCss({
 
 injectGlobalStyles();
 
-export default stitches;
-
-export { styled }
+// export default stitches;

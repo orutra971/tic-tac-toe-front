@@ -1,76 +1,214 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { styled } from '@stitches/react';
-import { violet, mauve, blackA, green } from '@radix-ui/colors';
-import Fieldset from '@components/Fieldset/Fieldset';
-import Input from '@components/Input/Input';
-import Label from '@components/Label/Label';
-import Image from '@components/Image/Image';
-import Button from '@components/Button/Button';
-import { signIn } from 'next-auth/react';
+import { violet, mauve, blackA } from '@radix-ui/colors';
+import { Button, Input, Fieldset, Image, Label} from '@components';
+import { signIn , useSession } from 'next-auth/react';
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
+import { unstable_getServerSession } from 'next-auth/next';
+import { authOptions } from 'pages/api/auth/[...nextauth]';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+
 
 const Login = () => {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const { data: session, status } = useSession();
+  const { replace } = useRouter();
+
+  // check if logged in
+  useEffect(() => {
+    if (status === "authenticated") replace('/');
+  }, []);
+
+
+  //tabs
+  const [tab, setTab] = useState<string>("tab1");
+
+  
+  // login
+  const [email, setEmail] = useState<string>("arturo.info2@gmail.com");
+  const [password, setPassword] = useState<string>("Oaxaca06");
+
+  // signup
+  const [signupUsername, setSignupUsername] = useState<string>("");
+  const [signupEmail, setSignupEmail] = useState<string>("");
+  const [signupPassword, setSignupPassword] = useState<string>("");
+  const [signupPasswordConfirmation, setSignupPasswordConfirmation] = useState<string>(""); 
+
+  useEffect(() => {
+    if (status === "authenticated") replace('/');
+  }, []);
+
+  const handleTab = (tab: string) => {
+    setTab(tab);
+  }
+
 
   const handleEmail = (email: string) => {
     setEmail(email);
   }
 
-  const handlePassword = (email: string) => {
-    setPassword(email);
+  const handlePassword = (password: string) => {
+    setPassword(password);
   }
 
-  const handleLogin = () => {
-    signIn('credentials',
+  const handleSignupUsername = (signupUsername: string) => {
+    setSignupUsername(signupUsername);
+  }
+
+  const handleSignupEmail = (signupEmail: string) => {
+    setSignupEmail(signupEmail);
+  }
+
+  const handleSignupPassword = (signupPassword: string) => {
+    setSignupPassword(signupPassword);
+  }
+
+  const handleSignupPasswordConfirmation = (signupPasswordConfirmation: string) => {
+    setSignupPasswordConfirmation(signupPasswordConfirmation);
+  }
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(!email || !email.trim()) {
+      toast.error("Please enter an email");
+      return;
+    }
+    
+    if(!password || !password.trim()) {
+      toast.error("Please enter your password");
+      return;
+    }
+
+    const promise = signIn('credentials',
       {
         email,
         password,
-        // The page where you want to redirect to after a 
-        // successful login
-        callbackUrl: `${window.location.origin}/account_page` 
+        redirect: false,
       }
-    )
+    ).then((res) => {
+      if (res.error) throw res.error;
+      replace('/');
+      return res;
+    });
+
+    toast.promise(
+      promise,
+      {
+        pending: {
+          render(){
+            return "Loading..."
+          },
+          icon: false,
+        },
+        error: {
+          render({data}){
+            // When the promise reject, data will contains the error
+            return `${data}`
+          }
+        }
+      }
+    );
+  }
+
+  const handleSignin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(!signupEmail || !signupEmail.trim()) {
+      toast.error("Please enter an email");
+      return;
+    }
+    
+    if(!signupPassword || !signupPassword.trim()) {
+      toast.error("Please a password");
+      return;
+    }
+
+    if (signupPassword !== signupPasswordConfirmation) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
+    const promise = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_BASE}/auth/signup`, {username: signupUsername, email: signupEmail, password: signupPassword})
+      .then((res) => res.data);
+
+    toast.promise(
+      promise,
+      {
+        pending: {
+          render(){
+            return "Loading..."
+          },
+          icon: false,
+        },
+        success: {
+          render({data}){
+            setSignupUsername("");
+            handleSignupEmail("");
+            handleSignupPassword("");
+            handleSignupPasswordConfirmation("");
+            setTab("tab1");
+            return `${data.message}`
+          }
+        },
+        error: {
+          render({data}){
+            return `${data}`
+          }
+        }
+      }
+    );
   }
 
   return (
     <Container>
-      <TabsRoot defaultValue="tab1">
+      <ToastContainer />
+      <TabsRoot defaultValue="tab1" value={tab} onValueChange={(value) => handleTab(value)}>
         <TabsList aria-label="Manage your account">
           <TabsTrigger value="tab1">Log in</TabsTrigger>
           <TabsTrigger value="tab2">Sign up</TabsTrigger>
         </TabsList>
         <TabsContent value="tab1">
-          <Image src="/icon.png" alt="logo" width="64"  height="64" variant='centered'/>
-          <Fieldset>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" onChange={(e) => handlePassword(e.target.value)}/>
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" onChange={(e) => handleEmail(e.target.value)} />
-          </Fieldset>
-          <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
-            <Button variant="green" onClick={handleLogin}>Log in</Button>
-          </Flex>
+          <form onSubmit={handleLogin}>
+            <Image src="/assets/icon.png" alt="logo" width="64"  height="64" variant='centered' priority ={true}/>
+            <Fieldset>
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={email} onChange={(e) => handleEmail(e.target.value)}/>
+            </Fieldset>
+            <Fieldset>
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" value={password} onChange={(e) => handlePassword(e.target.value)} />
+            </Fieldset>
+            <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
+              <Button variant="green" type='submit'>Log in</Button>
+            </Flex>
+          </form>
         </TabsContent>
         <TabsContent value="tab2">
-          <Image src="/icon.png" alt="logo" width="64"  height="64" variant='centered'/>
-          <Fieldset>
-            <Label htmlFor="siginEmail">Email</Label>
-            <Input id="siginEmail" type="email" />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="siginPassword">Password</Label>
-            <Input id="siginPassword" type="password" />
-          </Fieldset>
-          <Fieldset>
-            <Label htmlFor="siginConfirmPassword">Confirm password</Label>
-            <Input id="siginConfirmPassword" type="password" />
-          </Fieldset>
-          <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
-            <Button variant={"green"}>Sign up</Button>
-          </Flex>
+          <form onSubmit={handleSignin}>
+            <Image src="/assets/icon.png" alt="logo" width="64"  height="64" variant='centered'/>
+            <Fieldset>
+              <Label htmlFor="siginUsername">Username</Label>
+              <Input id="siginUsername" type="text" value={signupUsername} onChange={(e) => handleSignupUsername(e.target.value)}/>
+            </Fieldset>
+            <Fieldset>
+              <Label htmlFor="siginEmail">Email</Label>
+              <Input id="siginEmail" type="email" value={signupEmail} onChange={(e) => handleSignupEmail(e.target.value)}/>
+            </Fieldset>
+            <Fieldset>
+              <Label htmlFor="siginPassword">Password</Label>
+              <Input id="siginPassword" type="password" value={signupPassword}  onChange={(e) => handleSignupPassword(e.target.value)}/>
+            </Fieldset>
+            <Fieldset>
+              <Label htmlFor="siginConfirmPassword">Confirm password</Label>
+              <Input id="siginConfirmPassword" type="password" value={signupPasswordConfirmation}  onChange={(e) => handleSignupPasswordConfirmation(e.target.value)}/>
+            </Fieldset>
+            <Flex css={{ marginTop: 20, justifyContent: 'flex-end' }}>
+              <Button variant={"green"} type="submit">Sign up</Button>
+            </Flex>
+          </form>
         </TabsContent>
       </TabsRoot>
     </Container>
@@ -125,13 +263,6 @@ const TabsContent = styled(Tabs.Content, {
   '&:focus': { boxShadow: `0 0 0 2px black` },
 });
 
-const Text = styled('p', {
-  marginTop: 0,
-  marginBottom: 20,
-  color: mauve.mauve11,
-  fontSize: 15,
-  lineHeight: 1.5,
-});
 
 const Flex = styled('div', { display: 'flex' });
 
@@ -144,5 +275,19 @@ const Container = styled('div', {
   justifyContent: 'center',
 });
 
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      session: await unstable_getServerSession(
+        context.req,
+        context.res,
+        authOptions
+      ),
+    },
+  }
+}
+
+Login.auth = false;
 
 export default Login;

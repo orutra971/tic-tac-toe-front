@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@database": ["database/db.ts"],
-      "@components/*": ["components/*"],
+      "@components": ["components/index.ts"],
     },
     "target": "es6",
     "lib": [
@@ -28,7 +27,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]
