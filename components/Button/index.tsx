@@ -30,7 +30,7 @@ const Button = styled('button', {
 type MyButtonVariants = 'green';
 
 // Use `Stitches.CSS` or the configured type as shown above
-interface MyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { children?: React.ReactNode | string; variant?: MyButtonVariants };
+interface MyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { children?: React.ReactNode | string; variant?: MyButtonVariants }
 
 const MyButton: React.FC<MyButtonProps> = ({children, variant, ...props}) => {
   return (

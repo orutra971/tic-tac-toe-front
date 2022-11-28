@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next",
-    "buid": "next build",
+    "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"

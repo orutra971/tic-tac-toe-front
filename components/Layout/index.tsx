@@ -1,8 +1,8 @@
-import { Navbar, Footer } from '@components';
+import { Navbar } from '@components';
 import { User } from 'next-auth';
 import React from 'react';
 
-interface INavar { children: React.ReactNode, user: User, signOut: Function };
+interface INavar { children: React.ReactNode, user: User, signOut: any }
 
 const Layout: React.FC<INavar> = ({children, user, signOut}) => {
 

@@ -11,7 +11,7 @@ const Label = styled('label', {
 });
 
 // Use `Stitches.CSS` or the configured type as shown above
-interface MyLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> { children?: React.ReactNode };
+interface MyLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> { children?: React.ReactNode }
 
 const MyLabel: React.FC<MyLabelProps> = ({children, ...props}) => {
   return (

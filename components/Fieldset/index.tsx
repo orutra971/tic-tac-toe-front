@@ -13,7 +13,7 @@ const Fieldset = styled('fieldset', {
 });
 
 // Use `Stitches.CSS` or the configured type as shown above
-interface MyFieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement> { children?: React.ReactNode };
+interface MyFieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement> { children?: React.ReactNode }
 
 const MyFieldset: React.FC<MyFieldsetProps> = ({children, ...props}) => {
   return (

@@ -17,7 +17,7 @@ const Input = styled('input', {
 });
 
 // Use `Stitches.CSS` or the configured type as shown above
-interface MyInputProps extends React.InputHTMLAttributes<HTMLInputElement> { children?: React.ReactNode };
+interface MyInputProps extends React.InputHTMLAttributes<HTMLInputElement> { children?: React.ReactNode }
 
 const MyInput: React.FC<MyInputProps> = ({children, ...props}) => {
   return (
