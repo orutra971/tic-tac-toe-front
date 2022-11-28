@@ -54,7 +54,6 @@ export const config = {
 };
 
 const socketio = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  console.log(`Starting Socket.io server...`);
   if (!res.socket.server.io) {
     console.log(`New Socket.io server...`);
     // adapt Next's net Server to http Server

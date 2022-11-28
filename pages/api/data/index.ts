@@ -22,6 +22,9 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
   }
+  console.log({leaderboardResponse: leaderboardResponse });
+  console.log({usersResponse: usersResponse });
+  console.log({gamesResponse: gamesResponse });
 
   const filledLeaderboard: ILeaderboard[] = leaderboardResponse.data.map((e: ILeaderboard) => {
     let t: ILeaderboard = {...e, playing: false, pendingMatch: false};
