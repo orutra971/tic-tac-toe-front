@@ -22,14 +22,11 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
   }
-  console.log({leaderboardResponse: leaderboardResponse });
-  console.log({usersResponse: usersResponse });
-  console.log({gamesResponse: gamesResponse });
 
   const filledLeaderboard: ILeaderboard[] = leaderboardResponse.data.map((e: ILeaderboard) => {
     let t: ILeaderboard = {...e, playing: false, pendingMatch: false};
-    const user = usersResponse.data.find((v: IUser) => v._id === e.player_id);
-    const game = gamesResponse.data.find((v: IGame) => v.player_x === e.player_id || v.player_o === e.player_id);
+    const user = (usersResponse.data as IUser[]).find((v: IUser) => v._id === e.player_id);
+    const game = (gamesResponse.data as IGame[]).find((v: IGame) => v.player_x === e.player_id || v.player_o === e.player_id);
     if (user) t =  {...t, username: user.username, image: user.image};
     if (game) t =  {...t, playing: game.state === 0, pendingMatch: game.state === -1};
     return t;

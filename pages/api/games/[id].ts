@@ -1,5 +1,6 @@
 import { get } from "database/axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import { IUser } from "types/app";
 
 
 const game = async (request: NextApiRequest, response: NextApiResponse) => {  
@@ -20,8 +21,8 @@ const game = async (request: NextApiRequest, response: NextApiResponse) => {
   await get(`/games/${id}`, accessToken)
     .then(async (res) => {
       let t = {...res.data};
-      const dataPlayerX = usersResponse.data.find((e) => e._id === t.player_x);
-      const dataPlayerO = usersResponse.data.find((e) => e._id === t.player_o);
+      const dataPlayerX = (usersResponse.data as IUser[]).find((e) => e._id === t.player_x);
+      const dataPlayerO = (usersResponse.data as IUser[]).find((e) => e._id === t.player_o);
       if (dataPlayerX) t = {...t, name_x: dataPlayerX.username, image_x: dataPlayerX.image};
       if (dataPlayerO) t = {...t, name_o: dataPlayerO.username, image_o: dataPlayerO.image};
       // console.log({t, dataPlayerX, dataPlayerO});
