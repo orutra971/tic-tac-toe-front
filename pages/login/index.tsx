@@ -27,8 +27,8 @@ const Login = () => {
 
   
   // login
-  const [email, setEmail] = useState<string>("arturo.info2@gmail.com");
-  const [password, setPassword] = useState<string>("Oaxaca06");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   // signup
   const [signupUsername, setSignupUsername] = useState<string>("");
