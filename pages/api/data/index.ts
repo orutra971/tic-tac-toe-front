@@ -23,10 +23,13 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
     return;
   }
 
+  const _users = usersResponse.data as IUser[];
+  const _games = usersResponse.data as IGame[];
+
   const filledLeaderboard: ILeaderboard[] = leaderboardResponse.data.map((e: ILeaderboard) => {
     let t: ILeaderboard = {...e, playing: false, pendingMatch: false};
-    const user = (usersResponse.data as IUser[]).find((v: IUser) => v._id === e.player_id);
-    const game = (gamesResponse.data as IGame[]).find((v: IGame) => v.player_x === e.player_id || v.player_o === e.player_id);
+    const user = _users.find((v: IUser) => v._id === e.player_id);
+    const game = _games.find((v: IGame) => v.player_x === e.player_id || v.player_o === e.player_id);
     if (user) t =  {...t, username: user.username, image: user.image};
     if (game) t =  {...t, playing: game.state === 0, pendingMatch: game.state === -1};
     return t;
@@ -36,7 +39,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
 
   response.statusCode = 200;
   response.setHeader('Content-type', 'application/json');
-  response.end(JSON.stringify({players: filledLeaderboard, games: gamesResponse.data as IGame[], leaderboard}));
+  response.end(JSON.stringify({players: filledLeaderboard, games: _games, leaderboard}));
 }
 
 export default all;
