@@ -50,7 +50,7 @@ const Home = () => {
     if (!session.user || !session.user.id) return;
     const controller = new AbortController();
     const signal = controller.signal;
-    
+
     fetch('/api/data', 
       {
         headers: {
@@ -132,7 +132,7 @@ const Home = () => {
     const signal = controller.signal;
 
     // connect to socket server
-    const socket = io(process.env.BASE_URL, {
+    const socket = io(process.env.NEXT_PUBLIC_BASE_URL, {
       path: "/api/socketio",
     });
       // log socket connection
