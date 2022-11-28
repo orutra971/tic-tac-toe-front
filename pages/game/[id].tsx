@@ -153,7 +153,7 @@ const Gameplay = () => {
     const signal = controller.signal;
 
     // connect to socket server
-    const socket = io(window.location.origin, {
+    const socket = io(process.env.BASE_URL, {
       path: `/api/socketio`,
     });
 
