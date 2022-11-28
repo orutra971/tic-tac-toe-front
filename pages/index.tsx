@@ -132,7 +132,7 @@ const Home = () => {
     const signal = controller.signal;
 
     // connect to socket server
-    const socket = io(process.env.BASE_URL, {
+    const socket = io(window.location.origin, {
       path: "/api/socketio",
     });
       // log socket connection
