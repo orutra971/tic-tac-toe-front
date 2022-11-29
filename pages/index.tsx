@@ -215,7 +215,7 @@ const Home = () => {
     if (!session.user || !session.user.id  || !playersDictionary || !playersDictionary[session.user.id]) return;
     if (!matchMaking(playersDictionary[session.user.id])) return;
 
-    const interval = setTimeout(async () => {
+    const interval = setTimeout(() => {
       setRefused([]);
       
       if (!lastGameRefused) return;
@@ -224,7 +224,7 @@ const Home = () => {
       setLastGameRefused(null);
       if (!playersDictionary || !playersDictionary[opponentId] || playersDictionary[opponentId].pendingMatch || playersDictionary[opponentId].playing) return;    
 
-      await fetch(`/api/status/${t._id}`, {
+      fetch(`/api/status/${t._id}`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -286,18 +286,22 @@ const Home = () => {
 
         if (!game._id) return;
         if (!playersDictionary) return;
-        setAccept([...accept, game])
+
+        const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
         
         if (playersDictionary[game.player_x]) {
-          playersDictionary[game.player_x].pendingMatch = true;
+          playersDictionary[game.player_x].playing = true;
           const i = players.findIndex((e) => e.player_id === game.player_x);
-          if (i !== -1) players[i].pendingMatch = true;
+          if (i !== -1) players[i].playing = true;
         }
+
         if (playersDictionary[game.player_o]) {
-          playersDictionary[game.player_o].pendingMatch = true;
+          playersDictionary[game.player_o].playing = true;
           const i = players.findIndex((e) => e.player_id === game.player_o);
-          if (i !== -1) players[i].pendingMatch = true;
+          if (i !== -1) players[i].playing = true;
         }
+        
+        if (!myGame) return;
 
         await fetch(`/api/status/${game._id}`, {
           method: 'POST',
@@ -318,8 +322,8 @@ const Home = () => {
         if (!game._id) return;
         if (!playersDictionary) return;
 
-        // const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
-        // if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
+        const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
+        if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
 
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = false;
