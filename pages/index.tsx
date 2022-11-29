@@ -105,7 +105,7 @@ const Home = () => {
       description: '',
       match: game,
       accept: async () => {
-        fetch(`/api/status/${game._id}`, {
+        await fetch(`/api/status/${game._id}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -115,9 +115,7 @@ const Home = () => {
         });
       },
       cancel: async () => {
-        
-
-        fetch(`/api/status/${game._id}`, {
+        await fetch(`/api/status/${game._id}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -217,16 +215,16 @@ const Home = () => {
     if (!session.user || !session.user.id  || !playersDictionary || !playersDictionary[session.user.id]) return;
     if (!matchMaking(playersDictionary[session.user.id])) return;
 
-    const interval = setTimeout(() => {
+    const interval = setTimeout(async () => {
       setRefused([]);
-      /*
+      
       if (!lastGameRefused) return;
       const t = {...lastGameRefused} as IGame;
       const opponentId =  t.player_x === session.user.id ?  t.player_o : t.player_x;
       setLastGameRefused(null);
       if (!playersDictionary || !playersDictionary[opponentId] || playersDictionary[opponentId].pendingMatch || playersDictionary[opponentId].playing) return;    
 
-      fetch(`/api/status/${t._id}`, {
+      await fetch(`/api/status/${t._id}`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -234,7 +232,7 @@ const Home = () => {
         },
         body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
       });
-      */
+      
     }, 10000);
 
     return () => {
@@ -301,7 +299,7 @@ const Home = () => {
           if (i !== -1) players[i].pendingMatch = true;
         }
 
-        fetch(`/api/status/${game._id}`, {
+        await fetch(`/api/status/${game._id}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",

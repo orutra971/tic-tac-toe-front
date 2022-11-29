@@ -307,20 +307,20 @@ const Gameplay = () => {
           description: "Winner",
           opponent: myOpponentData,
           accept: async () => {
-           fetch(`/api/status/room/${game._id}`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-              "x-access-token" : session.user.accessToken
-            },
-            body: JSON.stringify({status: 'game_end' as Status, data: {
-              ...game,
-              state: myTurn === 'player_x' ? 1 : 2,
-            } as IGame}),
-           })
-           .then(() => {
-            replace('/');
-           });
+            await fetch(`/api/status/room/${game._id}`, {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+                "x-access-token" : session.user.accessToken
+              },
+              body: JSON.stringify({status: 'game_end' as Status, data: {
+                ...game,
+                state: myTurn === 'player_x' ? 1 : 2,
+              } as IGame}),
+            })
+            .then(() => {
+              replace('/');
+            });
           }
         }));
 
@@ -382,20 +382,20 @@ const Gameplay = () => {
         description: "Winner",
         opponent: prev === myTurn ? myData : myOpponentData,
         accept: async () => {
-         fetch(`/api/status/room/${game._id}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token" : session.user.accessToken
-          },
-          body: JSON.stringify({status: 'game_end' as Status, data: {
-            ...game,
-            state: prev === 'player_x' ? 1 : 2,
-          } as IGame}),
-         })
-         .then(() => {
-          replace('/');
-         });
+          await fetch(`/api/status/room/${game._id}`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token" : session.user.accessToken
+            },
+            body: JSON.stringify({status: 'game_end' as Status, data: {
+              ...game,
+              state: prev === 'player_x' ? 1 : 2,
+            } as IGame}),
+          })
+          .then(() => {
+            replace('/');
+          });
         }
       }));
       return;
@@ -410,20 +410,20 @@ const Gameplay = () => {
         opponent: myData,
         accept: async () => {
 
-         fetch(`/api/status/room/${game._id}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token" : session.user.accessToken
-          },
-          body: JSON.stringify({status: 'game_end' as Status, data: {
-            ...game,
-            state: 3,
-          } as IGame}),
-         })
-         .then(() => {
-          replace('/');
-         });
+         await fetch(`/api/status/room/${game._id}`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token" : session.user.accessToken
+            },
+            body: JSON.stringify({status: 'game_end' as Status, data: {
+              ...game,
+              state: 3,
+            } as IGame}),
+          })
+          .then(() => {
+            replace('/');
+          });
         }
       }));
       return;
