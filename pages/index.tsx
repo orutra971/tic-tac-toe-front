@@ -218,9 +218,7 @@ const Home = () => {
     const interval = setTimeout(async () => {
       if (lastGameRefused)  {
         const t = {...lastGameRefused} as IGame;
-        const opponentId =  t.player_x === session.user.id ?  t.player_o : t.player_x;
         setLastGameRefused(null);
-        if (!playersDictionary || !playersDictionary[opponentId] || playersDictionary[opponentId].pendingMatch || playersDictionary[opponentId].playing) return;    
 
         await fetch(`/api/status/${t._id}`, {
           method: 'POST',
