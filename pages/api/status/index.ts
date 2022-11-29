@@ -21,7 +21,7 @@ const getTimeToSleep = (): number => {
   return getRandomNumber({min: ranges[id].min, max: ranges[id].max})
 } 
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const status = async (request: NextApiRequest, response: NextApiResponseServerIO) => { 
   response.setHeader('Content-type', 'application/json');

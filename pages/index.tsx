@@ -16,6 +16,9 @@ import Dialog, { IAlertDialog } from 'components/Dialog';
 import { io } from "socket.io-client";
 import { ProgressIndeterminate } from './_app';
 
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+
 const Home = () => {
   const { data: session } = useSession();
   const { replace } = useRouter();
@@ -25,8 +28,6 @@ const Home = () => {
   const [playersDictionary, setPlayersDictionary] = useState<IPlayerDictionary>({});
   // match refused
   const [refused, setRefused] = useState<IGame[]>([]);
-  // match waiting to accept
-  const [lastGameRefused, setLastGameRefused] = useState<IGame>();
   // match waiting to accept
   const [accept, setAccept] = useState<IGame[]>([]);
   // top players
@@ -216,21 +217,6 @@ const Home = () => {
 
     const interval = setTimeout(async () => {
       setRefused([]);
-      console.log('lastGameRefused', lastGameRefused);
-      if (lastGameRefused)  {
-        const t = {...lastGameRefused} as IGame;
-        setLastGameRefused(null);
-        await fetch(`/api/status`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token" : session.user.accessToken
-          },
-          body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
-        });
-        return;
-      }   
-      
     }, 10000);
 
     return () => {
@@ -290,7 +276,7 @@ const Home = () => {
         if (!playersDictionary) return;
 
         const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
-        if (myGame) setLastGameRefused(lastGameRefused);
+        
 
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = false;
@@ -301,6 +287,21 @@ const Home = () => {
           playersDictionary[game.player_o].pendingMatch = false;
           const i = players.findIndex((e) => e.player_id === game.player_o);
           if (i !== -1) players[i].pendingMatch = false;
+        }
+
+        if (myGame) {
+          const lastGameRefused = {...game} as IGame;
+          sleep(9000)
+            .then(async () => {
+              await fetch(`/api/status`, {
+                method: 'POST',
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-access-token" : session.user.accessToken
+                },
+                body: JSON.stringify({status: 'automatic_game_start' as Status, data: lastGameRefused})
+              });
+            })
         }
       },
       automatic_game_start: async () => {
@@ -313,6 +314,7 @@ const Home = () => {
 
         setGames([...games, game]);
         if (myGame && game.state === 0) {
+          setRefused([]);
           replace(`/game/${game._id}`);
           return;
         } else if (myGame) {
