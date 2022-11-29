@@ -217,11 +217,10 @@ const Home = () => {
 
     const interval = setTimeout(async () => {
       setRefused([]);
-      console.log("automatic_game_start", lastGameRefused);
       if (lastGameRefused)  {
         const t = {...lastGameRefused} as IGame;
         setLastGameRefused(null);
-        await fetch(`/api/status/${t._id}`, {
+        await fetch(`/api/status`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
