@@ -309,7 +309,8 @@ const Home = () => {
         setAccept(accept.filter((e) => e._id !== game._id));
         if (!game._id) return;
         if (!playersDictionary) return;
-
+        if (playersDictionary[game.player_x].pendingMatch) return;
+        if (playersDictionary[game.player_x].playing) return;
         const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
 
         setGames([...games, game]);
