@@ -17,14 +17,17 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
   const usersResponse = await get('/users', accessToken);
   const gamesResponse = await get('/games', accessToken);
 
-  if (!leaderboardResponse.data || !usersResponse.data || !gamesResponse.data) {
+
+  console.log({usersResponse});
+
+  if (!leaderboardResponse.data || !usersResponse.data || !usersResponse.data.players || !gamesResponse.data) {
     response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
   }
 
-  const _users = usersResponse.data as IUser[];
+  const _users = usersResponse.data.players as IUser[];
   const _games = gamesResponse.data as IGame[];
 
   const filledLeaderboard: ILeaderboard[] = leaderboardResponse.data.map((e: ILeaderboard) => {
@@ -36,8 +39,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
     return t;
   })
 
-  console.log({_users, _games, usersResponse});
-
+  
   const leaderboard = [...filledLeaderboard].sort((a, b) => (a.score > b.score ? -1 : 1)).filter((_e, id) => id < 10);
 
   response.statusCode = 200;
