@@ -123,7 +123,6 @@ const Home = () => {
           },
           body: JSON.stringify({status: 'start_game_denied' as Status, data: game})
         });
-        
       },
     })
   }, [accept]);
@@ -217,6 +216,7 @@ const Home = () => {
 
     const interval = setTimeout(async () => {
       setRefused([]);
+      console.log('lastGameRefused', lastGameRefused);
       if (lastGameRefused)  {
         const t = {...lastGameRefused} as IGame;
         setLastGameRefused(null);
@@ -290,7 +290,7 @@ const Home = () => {
         if (!playersDictionary) return;
 
         const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
-        if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
+        if (myGame) setLastGameRefused(lastGameRefused);
 
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = false;
