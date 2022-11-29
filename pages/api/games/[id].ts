@@ -9,7 +9,7 @@ const game = async (request: NextApiRequest, response: NextApiResponse) => {
 
   const usersResponse = await fetch('/users', {headers:  {"x-access-token": accessToken}}).then((res) => res.json());
 
-  if (!accessToken || !id || !usersResponse.data) {
+  if (!accessToken || !id || !usersResponse) {
     response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Fail getting the games'}));
@@ -21,8 +21,8 @@ const game = async (request: NextApiRequest, response: NextApiResponse) => {
   await get(`/games/${id}`, accessToken)
     .then(async (res) => {
       let t = {...res.data};
-      const dataPlayerX = (usersResponse.data as IUser[]).find((e) => e._id === t.player_x);
-      const dataPlayerO = (usersResponse.data as IUser[]).find((e) => e._id === t.player_o);
+      const dataPlayerX = (usersResponse as IUser[]).find((e) => e._id === t.player_x);
+      const dataPlayerO = (usersResponse as IUser[]).find((e) => e._id === t.player_o);
       if (dataPlayerX) t = {...t, name_x: dataPlayerX.username, image_x: dataPlayerX.image};
       if (dataPlayerO) t = {...t, name_o: dataPlayerO.username, image_o: dataPlayerO.image};
       // console.log({t, dataPlayerX, dataPlayerO});

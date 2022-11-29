@@ -20,14 +20,14 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
 
   console.log({usersResponse});
 
-  if (!leaderboardResponse.data || !usersResponse.data || !gamesResponse.data) {
+  if (!leaderboardResponse.data || !usersResponse || !gamesResponse.data) {
     response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Failed getting the data'}));
     return;
   }
 
-  const _users = usersResponse.data as IUser[];
+  const _users = usersResponse as IUser[];
   const _games = gamesResponse.data as IGame[];
 
   const filledLeaderboard: ILeaderboard[] = leaderboardResponse.data.map((e: ILeaderboard) => {
