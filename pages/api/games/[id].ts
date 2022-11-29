@@ -23,8 +23,8 @@ const game = async (request: NextApiRequest, response: NextApiResponse) => {
       let t = {...res.data};
       const dataPlayerX = (usersResponse as IUser[]).find((e) => e._id === t.player_x);
       const dataPlayerO = (usersResponse as IUser[]).find((e) => e._id === t.player_o);
-      if (dataPlayerX) t = {...t, name_x: dataPlayerX.username, image_x: dataPlayerX.image};
-      if (dataPlayerO) t = {...t, name_o: dataPlayerO.username, image_o: dataPlayerO.image};
+      if (dataPlayerX) t = {...t, name_x: dataPlayerX.username, image_x: decodeURIComponent(dataPlayerX.image)};
+      if (dataPlayerO) t = {...t, name_o: dataPlayerO.username, image_o: decodeURIComponent(dataPlayerO.image)};
       // console.log({t, dataPlayerX, dataPlayerO});
       
       response.statusCode = 200;
