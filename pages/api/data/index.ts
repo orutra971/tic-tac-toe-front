@@ -36,7 +36,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
     return t;
   })
 
-  console.log({_users, _games});
+  console.log({_users, _games, usersResponse});
 
   const leaderboard = [...filledLeaderboard].sort((a, b) => (a.score > b.score ? -1 : 1)).filter((_e, id) => id < 10);
 
