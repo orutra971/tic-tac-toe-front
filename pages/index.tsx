@@ -228,6 +228,7 @@ const Home = () => {
           },
           body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
         });
+        return;
       }      
       setRefused([]);
       
@@ -363,6 +364,7 @@ const Home = () => {
         
         setGames([...games, game]);
         if (myGame && game.state === 0) {
+          setRefused([]);
           replace(`/game/${game._id}`);
           return;
         } else if (myGame) {
