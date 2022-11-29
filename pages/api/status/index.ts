@@ -34,7 +34,7 @@ const status = async (request: NextApiRequest, response: NextApiResponseServerIO
   const status = request.body.status as Status;
   const data = request.body.data;
 
-  if (status === 'start_game_petition') {
+  if (status === 'start_game_petition' || status === 'automatic_game_start') {
     const accessToken = request.headers["x-access-token"] as string;
     const game = data as IGame;
     

@@ -26,6 +26,8 @@ const Home = () => {
   // match refused
   const [refused, setRefused] = useState<IGame[]>([]);
   // match waiting to accept
+  const [lastGameRefused, setLastGameRefused] = useState<IGame>();
+  // match waiting to accept
   const [accept, setAccept] = useState<IGame[]>([]);
   // top players
   const [leaderboard, setLeaderboard] = useState<ILeaderboard[]>([]);
@@ -113,6 +115,8 @@ const Home = () => {
         });
       },
       cancel: async () => {
+        
+
         fetch(`/api/status/${game._id}`, {
           method: 'POST',
           headers: {
@@ -188,6 +192,12 @@ const Home = () => {
       setReceivedStatus({id: 'game_start', data: data});
     });
 
+    // force automatic a game start
+    socket.on("automatic_game_start", (data: IGame) => {
+      console.log("automatic_game_start");
+      setReceivedStatus({id: 'automatic_game_start', data: data});
+    });
+
     socket.on("disconnect", (reason) => {
       if (reason === "io server disconnect") {
         // the disconnection was initiated by the server, you need to reconnect manually
@@ -209,6 +219,21 @@ const Home = () => {
 
     const interval = setTimeout(() => {
       setRefused([]);
+      if (!lastGameRefused) return;
+      const t = {...lastGameRefused} as IGame;
+      const opponentId =  t.player_x === session.user.id ?  t.player_o : t.player_x;
+      setLastGameRefused(null);
+      if (!playersDictionary || !playersDictionary[opponentId] || playersDictionary[opponentId].pendingMatch || playersDictionary[opponentId].playing) return;    
+
+      fetch(`/api/status/${t._id}`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token" : session.user.accessToken
+        },
+        body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
+      });
+
     }, 10000);
 
     return () => {
@@ -244,9 +269,8 @@ const Home = () => {
 
         if (!game._id) return;
         if (!playersDictionary) return;
-
         setAccept([...accept, game])
-
+        
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = true;
           const i = players.findIndex((e) => e.player_id === game.player_x);
@@ -258,6 +282,33 @@ const Home = () => {
           if (i !== -1) players[i].pendingMatch = true;
         }
       },
+      automatic_game_start: async () => {
+        const game = receivedStatus.data as IGame;
+
+        if (!game._id) return;
+        if (!playersDictionary) return;
+        setAccept([...accept, game])
+        
+        if (playersDictionary[game.player_x]) {
+          playersDictionary[game.player_x].pendingMatch = true;
+          const i = players.findIndex((e) => e.player_id === game.player_x);
+          if (i !== -1) players[i].pendingMatch = true;
+        }
+        if (playersDictionary[game.player_o]) {
+          playersDictionary[game.player_o].pendingMatch = true;
+          const i = players.findIndex((e) => e.player_id === game.player_o);
+          if (i !== -1) players[i].pendingMatch = true;
+        }
+
+        fetch(`/api/status/${game._id}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token" : session.user.accessToken
+          },
+          body: JSON.stringify({status: 'game_start' as Status, data: game})
+        });
+      },
       start_game_denied: async () => {
         const game = receivedStatus.data as IGame;
 
@@ -267,6 +318,9 @@ const Home = () => {
 
         if (!game._id) return;
         if (!playersDictionary) return;
+
+        const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
+        if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
 
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = false;

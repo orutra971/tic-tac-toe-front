@@ -1,4 +1,4 @@
-export type Status = "player_signin" | "player_signout" | 'start_game_petition' | 'turn_selection' | 'start_game_denied' | 'game_start' | 'game_movement' | 'game_end' | 'create_room' | 'player_joined_room' | 'player_left_room';
+export type Status = "player_signin" | "player_signout" | 'start_game_petition' | 'turn_selection' | 'start_game_denied' | 'automatic_game_start' | 'game_start' | 'game_movement' | 'game_end' | 'create_room' | 'player_joined_room' | 'player_left_room';
 
 export interface ILeaderboard {
   _id: string;
