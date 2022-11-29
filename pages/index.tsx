@@ -219,6 +219,7 @@ const Home = () => {
 
     const interval = setTimeout(() => {
       setRefused([]);
+      /*
       if (!lastGameRefused) return;
       const t = {...lastGameRefused} as IGame;
       const opponentId =  t.player_x === session.user.id ?  t.player_o : t.player_x;
@@ -233,7 +234,7 @@ const Home = () => {
         },
         body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
       });
-
+      */
     }, 10000);
 
     return () => {
@@ -319,8 +320,8 @@ const Home = () => {
         if (!game._id) return;
         if (!playersDictionary) return;
 
-        const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
-        if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
+        // const myGame = game.player_x === session.user.id || game.player_o === session.user.id;
+        // if (!lastGameRefused && myGame) setLastGameRefused(lastGameRefused);
 
         if (playersDictionary[game.player_x]) {
           playersDictionary[game.player_x].pendingMatch = false;
