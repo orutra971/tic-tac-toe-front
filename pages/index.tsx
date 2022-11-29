@@ -215,8 +215,23 @@ const Home = () => {
     if (!session.user || !session.user.id  || !playersDictionary || !playersDictionary[session.user.id]) return;
     if (!matchMaking(playersDictionary[session.user.id])) return;
 
-    const interval = setTimeout(() => {
+    const interval = setTimeout(async () => {
       setRefused([]);
+      if (lastGameRefused)  {
+        const t = {...lastGameRefused} as IGame;
+        const opponentId =  t.player_x === session.user.id ?  t.player_o : t.player_x;
+        setLastGameRefused(null);
+        if (!playersDictionary || !playersDictionary[opponentId] || playersDictionary[opponentId].pendingMatch || playersDictionary[opponentId].playing) return;    
+
+        await fetch(`/api/status/${t._id}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token" : session.user.accessToken
+          },
+          body: JSON.stringify({status: 'automatic_game_start' as Status, data: t})
+        });
+      }
       
       if (!lastGameRefused) return;
       const t = {...lastGameRefused} as IGame;
