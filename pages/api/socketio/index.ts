@@ -61,10 +61,6 @@ const socketio = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const httpServer: NetServer = res.socket.server as any;
     const io = new ServerIO(httpServer, {
       path: "/api/socketio",
-      cors: {
-        origin: ["https://tic-tac-toe-mx.herokuapp.com", "https://tic-tac-toe-front-9lnq.vercel.app"],
-        credentials: true,
-      }
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;
