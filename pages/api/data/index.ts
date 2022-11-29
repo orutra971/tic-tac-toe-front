@@ -14,13 +14,13 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
   }
 
   const leaderboardResponse = await get('/leaderboard', accessToken);
-  const usersResponse = await get('/users', accessToken);
+  const usersResponse = await fetch('/users', {headers:  {"x-access-token": accessToken}}).then((res) => res.json());
   const gamesResponse = await get('/games', accessToken);
 
 
   console.log({usersResponse});
 
-  if (!leaderboardResponse.data || !usersResponse.data || !usersResponse.data || !gamesResponse.data) {
+  if (!leaderboardResponse.data || !usersResponse.data || !gamesResponse.data) {
     response.statusCode = 200;
     response.setHeader('Content-type', 'application/json');
     response.end(JSON.stringify({message: 'Failed getting the data'}));
