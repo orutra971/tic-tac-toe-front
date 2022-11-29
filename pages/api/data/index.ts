@@ -14,7 +14,7 @@ const all = async (request: NextApiRequest, response: NextApiResponse) => {
   }
 
   const leaderboardResponse = await get('/leaderboard', accessToken);
-  const usersResponse = await fetch('/users', {headers:  {"x-access-token": accessToken}}).then((res) => res.json());
+  const usersResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE}/users`, {headers:  {"x-access-token": accessToken}}).then((res) => res.json());
   const gamesResponse = await get('/games', accessToken);
 
 
